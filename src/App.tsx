@@ -10,8 +10,14 @@ function App() {
     <HashRouter> {/* sets up the base mechanism to navigate between multiple screens */}
       <div>
         <h1>CS5610 Web Development</h1>
+        <h2>Jiadi Luo</h2>
+        <h3>
+          Section: 02 | CRN: 20595 <br />
+          <a id="wd-github" href="https://github.com/jiadil/kanbas-react-web-app" target="_blank">My GitHub Repo</a>
+        </h3>
+
         <Routes> {/* display an element only if the URL matches the pattern in the path attribute. */}
-          <Route path="/" element={<Navigate to="Labs" />} /> {/* default to Labs */}
+          <Route path="/" element={<Navigate to="Kanbas" />} /> {/* default to Kanbas */}
           <Route path="/Labs/*" element={<Labs />} /> {/* only http://localhost:3000/#/Labs display Labs */}
           <Route path="/Kanbas/*" element={<Kanbas />} />
         </Routes>

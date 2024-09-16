@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 export default function Dashboard() {
     return (
         <div id="wd-dashboard">
-            <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-            <h2 id="wd-dashboard-published">Published Courses (7)</h2> <hr />
+            <h1 id="wd-dashboard-title">Dashboard</h1><hr />
+            <h2 id="wd-dashboard-published">Published Courses (7)</h2><hr />
             <div id="wd-dashboard-courses">
                 <div className="wd-dashboard-course">
                     <img src="/images/reactjs.jpg" width={200} />
@@ -14,7 +14,7 @@ export default function Dashboard() {
                     </div>
                 </div>
                 <div className="wd-dashboard-course">
-                    <img src="/images/reactjs.jpg" width={200} />
+                    <img src="/images/reactjs2.jpg" width={200} />
                     <div>
                         <Link className="wd-dashboard-course-link" to="/Kanbas/Courses/2234/Home">CS2234 React JS</Link>
                         <p className="wd-dashboard-course-title">Full Stack software developer 2</p>
@@ -22,7 +22,7 @@ export default function Dashboard() {
                     </div>
                 </div>
                 <div className="wd-dashboard-course">
-                    <img src="/images/reactjs.jpg" width={200} />
+                    <img src="/images/reactjs3.jpg" width={200} />
                     <div>
                         <Link className="wd-dashboard-course-link" to="/Kanbas/Courses/3234/Home">CS3334 React JS</Link>
                         <p className="wd-dashboard-course-title">Full Stack software developer 3</p>

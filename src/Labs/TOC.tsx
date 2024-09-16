@@ -1,10 +1,6 @@
 import { Link } from "react-router-dom";
 export default function TOC() {
     return (
-        // create a link to github reppo
-
-
-
         <ul>
             <li><Link to="/Labs">Labs</Link></li>
             <li><Link to="/Labs/Lab1">Lab 1</Link></li>
