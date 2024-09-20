@@ -6,6 +6,13 @@ import Lab3 from "./Lab3";
 export default function Labs() {
     return (
         <div>
+            <h1>CS5610 Web Development</h1>
+            <h2>Jiadi Luo</h2>
+            <h3>
+                Section: 02 | CRN: 20595 <br />
+                <a id="wd-github" href="https://github.com/jiadil/kanbas-react-web-app" target="_blank">My GitHub Repo</a>
+            </h3>
+            
             <h1>Labs</h1>
             <TOC />
             <Routes>

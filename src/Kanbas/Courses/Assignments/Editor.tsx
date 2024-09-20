@@ -99,7 +99,12 @@ export default function AssignmentEditor() {
 
             <hr />
             <div style={{ textAlign: 'right' }}>
-                <button id="wd-cancel">Cancel</button> <button id="wd-save">Save</button>
+                <a href="#/Kanbas/Courses/1234/Assignments">
+                    <button id="wd-cancel">Cancel</button>
+                </a>
+                <a href="#/Kanbas/Courses/1234/Assignments">
+                    <button id="wd-save">Save</button>
+                </a>
             </div>
         </div>
     );
