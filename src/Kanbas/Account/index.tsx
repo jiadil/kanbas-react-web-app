@@ -12,7 +12,7 @@ export default function Account() {
                 <div className="d-none d-md-block">
                     <AccountNavigation />
                 </div>
-                <div className="w-50 mx-auto">
+                <div className="w-50 ms-3">
                     <Routes>
                         <Route path="/" element={<Navigate to="/Kanbas/Account/Signin" />} />
                         <Route path="/Signin" element={<Signin />} />

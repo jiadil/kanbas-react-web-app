@@ -2,7 +2,7 @@ export default function AssignmentEditor() {
     return (
         <div id="wd-assignments-editor" className="container mt-3">
             <form>
-                <div className="mb-3">
+                <div className="mb-2">
                     <label htmlFor="wd-name" className="form-label">Assignment Name</label>
                     <input id="wd-name" defaultValue="A1 - ENV + HTML" className="form-control" />
                 </div>
@@ -120,7 +120,7 @@ export default function AssignmentEditor() {
                 <hr />
                 <div className="text-end">
                     <a href="#/Kanbas/Courses/1234/Assignments" className="btn btn-secondary me-2">Cancel</a>
-                    <button type="submit" className="btn btn-primary">Save</button>
+                    <button type="submit" className="btn btn-danger">Save</button>
                 </div>
             </form>
         </div>

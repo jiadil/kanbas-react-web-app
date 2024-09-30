@@ -3,6 +3,7 @@ import AssignmentsTitleButtons from "./AssignmentsTitleButtons";
 import AssignmentsListButtons from "./AssignmentsListButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { PiNotePencil } from "react-icons/pi";
+import { IoMdArrowDropdown } from "react-icons/io";
 export default function Assignments() {
     return (
         <div id="wd-assignments">
@@ -11,6 +12,7 @@ export default function Assignments() {
             <div className="d-title d-flex justify-content-between align-items-center p-3 ps-2 bg-secondary">
                 <div className="d-flex align-items-center fs-3">
                     <BsGripVertical className="me-2 fs-2" />
+                    <IoMdArrowDropdown className="me-2 fs-2" />
                     <div id="wd-assignments-title" className="fs-4 fw-bolder">ASSIGNMENTS</div>
                 </div>
                 <AssignmentsTitleButtons />
@@ -27,8 +29,7 @@ export default function Assignments() {
                         <div className="pt-3 pb-3">
                             <div><strong>A1</strong></div>
                             <div>
-                                <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at
-                                12:00am | <strong> Due</strong> May 13 at 11:59pm | 100 pts
+                                <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00am | <strong>Due</strong> May 13 at 11:59pm | 100 pts
                             </div>
                         </div>
                     </div>
@@ -48,8 +49,7 @@ export default function Assignments() {
                         <div className="pt-3 pb-3">
                             <div><strong>A2</strong></div>
                             <div>
-                                <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 16 at
-                                12:00am | <strong> Due</strong> May 23 at 11:59pm | 100 pts
+                                <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 16 at 12:00am | <strong>Due</strong> May 23 at 11:59pm | 100 pts
                             </div>
                         </div>
                     </div>
@@ -69,8 +69,7 @@ export default function Assignments() {
                         <div className="pt-3 pb-3">
                             <div><strong>A3</strong></div>
                             <div>
-                                <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 26 at
-                                12:00am | <strong> Due</strong> May 30 at 11:59pm | 100 pts
+                                <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 26 at 12:00am | <strong>Due</strong> May 30 at 11:59pm | 100 pts
                             </div>
                         </div>
                     </div>
