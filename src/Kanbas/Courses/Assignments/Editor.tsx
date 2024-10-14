@@ -19,7 +19,7 @@ export default function AssignmentEditor() {
 
                 <div className="mb-3">
                     <label htmlFor="wd-description" className="form-label"></label>
-                    <textarea id="wd-description" cols={30} rows={5} className="form-control" defaultValue={`The assignment (${assignment.title}) is available online.`} />
+                    <textarea id="wd-description" cols={30} rows={5} className="form-control" defaultValue={assignment.description} />
                 </div>
 
                 <div className="row align-items-start mb-3">
@@ -27,7 +27,7 @@ export default function AssignmentEditor() {
                         <label htmlFor="wd-points" className="form-label pt-1">Points</label>
                     </div>
                     <div className="col">
-                        <input type="text" className="form-control" id="wd-points" defaultValue="100" />
+                        <input type="text" className="form-control" id="wd-points" defaultValue={assignment.points} />
                     </div>
                 </div>
 
@@ -110,17 +110,17 @@ export default function AssignmentEditor() {
 
                             <div className="mb-3">
                                 <label htmlFor="wd-due-date" className="form-label pt-1"><strong>Due</strong></label>
-                                <input type="date" className="form-control" id="wd-due-date" defaultValue="2024-09-30" />
+                                <input type="datetime-local" className="form-control" id="wd-due-date" defaultValue={assignment.due ? assignment.due.slice(0, 16) : ""} />
                             </div>
 
                             <div className="row mb-3">
                                 <div className="col">
                                     <label htmlFor="wd-available-from" className="form-label pt-1"><strong>Available From</strong></label>
-                                    <input type="date" className="form-control" id="wd-available-from" defaultValue="2024-09-01" />
+                                    <input type="datetime-local" className="form-control" id="wd-available-from" defaultValue={assignment.available ? assignment.available.slice(0, 16) : ""} />
                                 </div>
                                 <div className="col">
                                     <label htmlFor="wd-available-until" className="form-label pt-1"><strong>Until</strong></label>
-                                    <input type="date" className="form-control" id="wd-available-until" defaultValue="2024-09-30" />
+                                    <input type="datetime-local" className="form-control" id="wd-available-until" defaultValue={assignment.until ? assignment.until.slice(0, 16) : ""} />
                                 </div>
                             </div>
                         </div>
