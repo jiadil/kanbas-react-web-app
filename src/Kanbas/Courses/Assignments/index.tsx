@@ -15,7 +15,7 @@ export default function Assignments() {
 
     const formatDate = (dateStr: string) => {
         const date = new Date(dateStr);
-        return date.toLocaleString('en-US', {
+        const formattedDate = date.toLocaleString('en-US', {
             month: 'short',
             day: 'numeric',
             hour: 'numeric',
@@ -23,6 +23,9 @@ export default function Assignments() {
             timeZone: 'UTC',
             hour12: true
         });
+
+        const [datePart, timePart] = formattedDate.split(", ");
+        return `${datePart} at ${timePart}`;
     };
 
     return (
