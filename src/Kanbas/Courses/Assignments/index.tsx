@@ -7,6 +7,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 
 import { useParams } from "react-router";
 import * as db from "../../Database";
+import FacultyRoute from "../../Account/FacultyRoute";
 export default function Assignments() {
     const { cid } = useParams();
     const { assignments } = db;
@@ -46,11 +47,14 @@ export default function Assignments() {
                     <li key={assignment._id} className="wd-assignment-list-item list-group-item d-flex justify-content-between align-items-center p-0 fs-5 border-gray" style={{ borderLeft: "5px solid green" }}>
                         <div className="d-flex align-items-center col-10 me-2" style={{ flex: "1" }}>
                             <BsGripVertical className="me-1 ms-2 fs-3" style={{ color: "black", flexShrink: "0" }} />
-                            <a className="wd-assignment-link d-flex align-items-center p-2 me-2" href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
-                                <PiNotePencil className="fs-3" style={{ color: "green" }} />
-                            </a>
+                            
+                            <FacultyRoute>
+                                <a className="wd-assignment-link d-flex align-items-center p-2" href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
+                                    <PiNotePencil className="fs-3" style={{ color: "green" }} />
+                                </a>
+                            </FacultyRoute>
 
-                            <div className="pt-3 pb-3">
+                            <div className="pt-3 pb-3 ms-2">
                                 <div><strong>{assignment.title}</strong></div>
                                 <div>
                                     <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> {formatDate(assignment.available)} | <strong>Due</strong> {formatDate(assignment.due)} | {assignment.points} pts
@@ -63,65 +67,6 @@ export default function Assignments() {
                         </div>
                     </li>
                 ))}
-                {/* <li className="wd-assignment-list-item list-group-item d-flex justify-content-between align-items-center p-0 fs-5 border-gray" style={{ borderLeft: "5px solid green" }}>
-                    <div className="d-flex align-items-center col-10 me-2" style={{ flex: "1" }}>
-                        <BsGripVertical className="me-1 ms-2 fs-3" style={{color: "black", flexShrink: "0" }} />
-                        <a className="wd-assignment-link d-flex align-items-center p-2 me-2" href="#/Kanbas/Courses/1234/Assignments/1">
-                            <PiNotePencil className="fs-3" style={{ color: "green" }} />
-                        </a>
-
-                        <div className="pt-3 pb-3">
-                            <div><strong>A1</strong></div>
-                            <div>
-                                <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00am | <strong>Due</strong> May 13 at 11:59pm | 100 pts
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="d-flex align-items-center justify-content-end col-2">
-                        <AssignmentsListButtons />
-                    </div>
-                </li>
-
-                <li className="wd-assignment-list-item list-group-item d-flex justify-content-between align-items-center p-0 fs-5 border-gray" style={{ borderLeft: "5px solid green" }}>
-                    <div className="d-flex align-items-center col-10 me-2" style={{ flex: "1" }}>
-                        <BsGripVertical className="me-1 ms-2 fs-3" style={{color: "black", flexShrink: "0" }} />
-                        <a className="wd-assignment-link d-flex align-items-center p-2 me-2" href="#/Kanbas/Courses/1234/Assignments/2">
-                            <PiNotePencil className="fs-3" style={{ color: "green" }} />
-                        </a>
-
-                        <div className="pt-3 pb-3">
-                            <div><strong>A2</strong></div>
-                            <div>
-                                <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 16 at 12:00am | <strong>Due</strong> May 23 at 11:59pm | 100 pts
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="d-flex align-items-center justify-content-end col-2">
-                        <AssignmentsListButtons />
-                    </div>
-                </li>
-
-                <li className="wd-assignment-list-item list-group-item d-flex justify-content-between align-items-center p-0 fs-5 border-gray" style={{ borderLeft: "5px solid green" }}>
-                    <div className="d-flex align-items-center col-10 me-2" style={{ flex: "1" }}>
-                        <BsGripVertical className="me-1 ms-2 fs-3" style={{color: "black", flexShrink: "0" }} />
-                        <a className="wd-assignment-link d-flex align-items-center p-2 me-2" href="#/Kanbas/Courses/1234/Assignments/3">
-                            <PiNotePencil className="fs-3" style={{ color: "green" }} />
-                        </a>
-
-                        <div className="pt-3 pb-3">
-                            <div><strong>A3</strong></div>
-                            <div>
-                                <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 26 at 12:00am | <strong>Due</strong> May 30 at 11:59pm | 100 pts
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="d-flex align-items-center justify-content-end col-2">
-                        <AssignmentsListButtons />
-                    </div>
-                </li> */}
             </ul>
         </div>
     );

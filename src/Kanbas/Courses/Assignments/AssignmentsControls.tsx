@@ -1,5 +1,9 @@
 import { FaPlus, FaSearch } from "react-icons/fa";
+import FacultyRoute from "../../Account/FacultyRoute";
+import { useNavigate, useParams } from "react-router-dom";
 export default function AssignmentsControls() {
+    const navigate = useNavigate();
+    const { cid } = useParams();
     return (
         <div id="wd-modules-controls" className="d-flex justify-content-between align-items-center">
             <div className="input-group me-5">
@@ -9,17 +13,22 @@ export default function AssignmentsControls() {
                 <input type="text" id="wd-search-assignment" className="form-control border-start-0" placeholder="Search..." />
             </div>
 
-            <div className="d-flex">
-                <button id="wd-add-assignment-group" className="btn btn-lg btn-secondary d-flex align-items-center me-1">
-                    <FaPlus className="position-relative me-1" style={{ bottom: "1px" }} />
-                    Group
-                </button>
+            <FacultyRoute>
+                <div className="d-flex">
+                    <button id="wd-add-assignment-group" className="btn btn-lg btn-secondary d-flex align-items-center me-1">
+                        <FaPlus className="position-relative me-1" style={{ bottom: "1px" }} />
+                        Group
+                    </button>
 
-                <button id="wd-add-assignment" className="btn btn-lg btn-danger d-flex align-items-center">
-                    <FaPlus className="position-relative me-1" style={{ bottom: "1px" }} />
-                    Assignment
-                </button>
-            </div>
+                    <button
+                        onClick={() => navigate(`/Kanbas/Courses/${cid}/Assignments/new`)} // Add this line
+                        id="wd-add-assignment"
+                        className="btn btn-lg btn-danger d-flex align-items-center">
+                        <FaPlus className="position-relative me-1" style={{ bottom: "1px" }} />
+                        Assignment
+                    </button>
+                </div>
+            </FacultyRoute>
         </div>
     );
 }
