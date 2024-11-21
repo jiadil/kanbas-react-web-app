@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import * as db from "./Database";
 import FacultyRoute from "./Account/FacultyRoute";
 import StudentRoute from "./Account/StudentRoute";
 
@@ -83,11 +82,6 @@ export default function Dashboard(
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
                     {courses
-                        .filter((course) =>
-                            currentUser.role === "FACULTY" ||
-                            showAllCourses ||
-                            isEnrolled(course._id)
-                        )
                         .map((course) => (
                             <div key={course._id} className="wd-dashboard-course col" style={{ width: "300px" }}>
                                 <div className="card rounded-3 overflow-hidden">
