@@ -13,6 +13,21 @@ export default function Labs() {
             <div>
                 <h1>CS5610 Web Development</h1>
                 <h2>Jiadi Luo | Section: 02</h2>
+                <h3>Links to Repos: </h3>
+                <ul>
+                    <li>
+                        <a href="https://github.com/jiadil/kanbas-react-web-app">kanbas-react-web-app</a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/jiadil/kanbas-node-server-app">kanbas-node-server-app</a>
+                    </li>
+                    <li>
+                        <a href="https://kanbas-node-server-app-qill.onrender.com">root of the server (Render)</a>
+                    </li>
+                </ul>
+
+
+
                 <hr />
                 <h1>Labs</h1>
                 <TOC />
