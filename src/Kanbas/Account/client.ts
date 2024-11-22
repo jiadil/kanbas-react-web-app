@@ -11,6 +11,10 @@ export const findMyCourses = async () => {
     const { data } = await axiosWithCredentials.get(`${USERS_API}/current/courses`);
     return data;
 };
+export const findAllCourses = async () => {
+    const { data } = await axiosWithCredentials.get(`${USERS_API}/current/courses?showAll=true`);
+    return data;
+}
 
 
 export const signin = async (credentials: any) => {

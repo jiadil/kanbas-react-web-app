@@ -2,6 +2,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addAssignment, updateAssignment } from "./reducer";
+import * as client from "./client"; 
 
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
@@ -28,24 +29,51 @@ export default function AssignmentEditor() {
         return <div>Assignment not found</div>;
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        // Get form elements with null checks
+        const nameInput = document.getElementById("wd-name") as HTMLInputElement;
+        const descriptionInput = document.getElementById("wd-description") as HTMLTextAreaElement;
+        const pointsInput = document.getElementById("wd-points") as HTMLInputElement;
+        const dueDateInput = document.getElementById("wd-due-date") as HTMLInputElement;
+        const availableFromInput = document.getElementById("wd-available-from") as HTMLInputElement;
+        const availableUntilInput = document.getElementById("wd-available-until") as HTMLInputElement;
+
+        // Add null checks
+        if (!nameInput || !descriptionInput || !pointsInput ||
+            !dueDateInput || !availableFromInput || !availableUntilInput) {
+            console.error("Form elements not found");
+            return;
+        }
+
+        // Check if cid exists
+        if (!cid) {
+            console.error("Course ID is missing");
+            return;
+        }
+
         const newAssignment = {
             _id: aid === "new" ? new Date().getTime().toString() : aid,
-            title: (document.getElementById("wd-name") as HTMLInputElement).value,
-            description: (document.getElementById("wd-description") as HTMLTextAreaElement).value,
-            points: parseInt((document.getElementById("wd-points") as HTMLInputElement).value),
+            title: nameInput.value,
+            description: descriptionInput.value,
+            points: parseInt(pointsInput.value),
             course: cid,
-            due: (document.getElementById("wd-due-date") as HTMLInputElement).value + "Z",
-            available: (document.getElementById("wd-available-from") as HTMLInputElement).value + "Z",
-            until: (document.getElementById("wd-available-until") as HTMLInputElement).value + "Z"
+            due: dueDateInput.value + "Z",
+            available: availableFromInput.value + "Z",
+            until: availableUntilInput.value + "Z"
         };
 
-        if (aid === "new") {
-            dispatch(addAssignment(newAssignment));
-        } else {
-            dispatch(updateAssignment(newAssignment));
+        try {
+            if (aid === "new") {
+                const created = await client.createAssignment(cid, newAssignment);
+                dispatch(addAssignment(created));
+            } else if (aid) {  // Add this check for aid
+                const updated = await client.updateAssignment(aid, newAssignment);
+                dispatch(updateAssignment(updated));
+            }
+            navigate(`/Kanbas/Courses/${cid}/Assignments`);
+        } catch (error) {
+            console.error("Error saving assignment:", error);
         }
-        navigate(`/Kanbas/Courses/${cid}/Assignments`);
     };
 
     // Keep your entire JSX the same, just change the Save button

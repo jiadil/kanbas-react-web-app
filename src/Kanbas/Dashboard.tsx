@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+// import * as db from "./Database";
 import FacultyRoute from "./Account/FacultyRoute";
 import StudentRoute from "./Account/StudentRoute";
+import { addEnrollment, removeEnrollment, setShowAllCourses, setEnrollments } from "./Courses/Enrollments/reducer";
+import enrollmentClient from "./Courses/Enrollments/client";
+import courseClient from "./Courses/client";
 
 interface Enrollment {
     _id: string;
@@ -11,39 +15,67 @@ interface Enrollment {
 }
 
 export default function Dashboard(
-    { courses, course, setCourse, addNewCourse, deleteCourse, updateCourse }:
+    { courses, course, setCourse, addNewCourse, deleteCourse, updateCourse, fetchCourses, setCourses }:
         {
-            courses: any[]; course: any; setCourse: (course: any) => void;
-            addNewCourse: () => void; deleteCourse: (course: any) => void;
+            courses: any[];
+            course: any;
+            setCourse: (course: any) => void;
+            addNewCourse: () => void;
+            deleteCourse: (course: any) => void;
             updateCourse: () => void;
+            fetchCourses: (showAll: boolean) => Promise<void>;
+            setCourses: (courses: any[]) => void;
         }
 ) {
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments, showAllCourses } = useSelector((state: any) => state.enrollmentReducer);
 
-    const toggleShowAll = () => {
-        dispatch({
-            type: "set-show-all-courses",
-            payload: !showAllCourses
-        });
+    const toggleShowAll = async () => {
+        dispatch(setShowAllCourses(!showAllCourses));
+        await fetchCourses(!showAllCourses);
     };
 
-    const toggleEnrollment = (courseId: string) => {
-        const existingEnrollment = enrollments.find(
-            (e: Enrollment) => e.user === currentUser._id && e.course === courseId
-        );
+    useEffect(() => {
+        const loadData = async () => {
+            if (currentUser?._id) {
+                try {
+                    // Load enrollments first
+                    const enrollmentData = await enrollmentClient.findUserEnrollments(currentUser._id);
+                    dispatch(setEnrollments(enrollmentData));
 
-        if (existingEnrollment) {
-            dispatch({
-                type: "remove-enrollment",
-                payload: { userId: currentUser._id, courseId }
-            });
-        } else {
-            dispatch({
-                type: "add-enrollment",
-                payload: { userId: currentUser._id, courseId }
-            });
+                    // Then load appropriate courses based on showAllCourses state
+                    const courses = showAllCourses ?
+                        await courseClient.fetchAllCourses() :
+                        await courseClient.fetchEnrolledCourses();
+                    setCourses(courses);
+                } catch (error) {
+                    console.error("Error loading data:", error);
+                }
+            }
+        };
+        loadData();
+    }, [currentUser, showAllCourses]);
+
+    const toggleEnrollment = async (courseId: string) => {
+        try {
+            if (isEnrolled(courseId)) {
+                await enrollmentClient.unenrollFromCourse(currentUser._id, courseId);
+                dispatch(removeEnrollment({
+                    userId: currentUser._id,
+                    courseId
+                }));
+            } else {
+                const enrollment = await enrollmentClient.enrollInCourse(currentUser._id, courseId);
+                dispatch(addEnrollment(enrollment));
+            }
+            // Reload courses after enrollment change
+            const courses = showAllCourses ?
+                await courseClient.fetchAllCourses() :
+                await courseClient.fetchEnrolledCourses();
+            setCourses(courses);
+        } catch (error) {
+            console.error("Error toggling enrollment:", error);
         }
     };
 
@@ -67,21 +99,28 @@ export default function Dashboard(
             </FacultyRoute>
 
             <StudentRoute>
-                <h5>Enrollments
+                <h5>Course Management
                     <button
                         className="btn btn-primary float-end"
-                        onClick={toggleShowAll}
+                        onClick={() => {
+                            dispatch(setShowAllCourses(!showAllCourses));
+                            fetchCourses(!showAllCourses);
+                        }}
                     >
-                        {showAllCourses ? "My Courses" : "Enrollments"}
+                        {showAllCourses ? "Show My Courses" : "Show All Courses"}
                     </button>
                 </h5>
-                <br />
             </StudentRoute>
 
             <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
                     {courses
+                        .filter((course) =>
+                            currentUser.role === "FACULTY" ||
+                            showAllCourses ||
+                            isEnrolled(course._id)
+                        )
                         .map((course) => (
                             <div key={course._id} className="wd-dashboard-course col" style={{ width: "300px" }}>
                                 <div className="card rounded-3 overflow-hidden">
@@ -132,21 +171,34 @@ export default function Dashboard(
                                             </FacultyRoute>
 
                                             <StudentRoute>
-                                                <button
-                                                    className={`btn float-end ${showAllCourses ? (
-                                                            isEnrolled(course._id) ? 'btn-danger' : 'btn-success'
-                                                        ) : 'd-none'
-                                                        }`}
-                                                    onClick={(event) => {
-                                                        event.preventDefault();
-                                                        event.stopPropagation();
-                                                        toggleEnrollment(course._id);
-                                                    }}
-                                                >
-                                                    {showAllCourses ? (
-                                                        isEnrolled(course._id) ? 'Unenroll' : 'Enroll'
-                                                    ) : ''}
-                                                </button>
+                                                {showAllCourses ? (
+                                                    // In "Show All Courses" view:
+                                                    // Show Unenroll for enrolled courses and Enroll for non-enrolled courses
+                                                    isEnrolled(course._id) ? (
+                                                        <button
+                                                            className="btn btn-danger float-end"
+                                                            onClick={(event) => {
+                                                                event.preventDefault();
+                                                                event.stopPropagation();
+                                                                toggleEnrollment(course._id);
+                                                            }}
+                                                        >
+                                                            Unenroll
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            className="btn btn-success float-end"
+                                                            onClick={(event) => {
+                                                                event.preventDefault();
+                                                                event.stopPropagation();
+                                                                toggleEnrollment(course._id);
+                                                            }}
+                                                        >
+                                                            Enroll
+                                                        </button>
+                                                    )
+                                                ) : null  // In "My Courses" view: no enrollment buttons
+                                                }
                                             </StudentRoute>
                                         </div>
                                     </Link>

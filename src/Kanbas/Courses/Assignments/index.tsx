@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAssignment } from "./reducer";
 import { useParams } from "react-router-dom";
+import * as client from "./client";
+import { setAssignments, deleteAssignment } from "./reducer";
 import AssignmentsControls from "./AssignmentsControls";
 import AssignmentsTitleButtons from "./AssignmentsTitleButtons";
 import AssignmentsListButtons from "./AssignmentsListButtons";
@@ -26,24 +27,42 @@ export default function Assignments() {
     const dispatch = useDispatch();
     const { cid } = useParams();
     const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
-
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [selectedAssignmentId, setSelectedAssignmentId] = useState<string | null>(null);
 
-    const filteredAssignments = assignments.filter((assignment: Assignment) =>
-        assignment.course === cid
-    );
+    const fetchAssignments = async () => {
+        try {
+            const assignments = await client.findAssignmentsForCourse(cid as string);
+            console.log("Fetched assignments:", assignments); // Add this for debugging
+            dispatch(setAssignments(assignments));
+        } catch (error) {
+            console.error("Error fetching assignments:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (cid) {
+            fetchAssignments();
+        }
+    }, [cid]);
+
+    console.log("Current assignments in render:", assignments);
 
     const confirmDeleteAssignment = (assignmentId: string) => {
         setSelectedAssignmentId(assignmentId);
         setShowDeleteDialog(true);
     };
 
-    const handleDeleteAssignment = () => {
+    const handleDeleteAssignment = async () => {
         if (selectedAssignmentId) {
-            dispatch(deleteAssignment(selectedAssignmentId));
-            setShowDeleteDialog(false);
-            setSelectedAssignmentId(null);
+            try {
+                await client.deleteAssignment(selectedAssignmentId);
+                dispatch(deleteAssignment(selectedAssignmentId));
+                setShowDeleteDialog(false);
+                setSelectedAssignmentId(null);
+            } catch (error) {
+                console.error("Error deleting assignment:", error);
+            }
         }
     };
 
@@ -80,7 +99,7 @@ export default function Assignments() {
             </div>
 
             <ul id="wd-assignment-list" className="list-group rounded-0">
-                {filteredAssignments.map((assignment: Assignment) => (
+                {assignments.map((assignment: Assignment) => (
                     <li key={assignment._id} className="wd-assignment-list-item list-group-item d-flex justify-content-between align-items-center p-0 fs-5 border-gray" style={{ borderLeft: "5px solid green" }}>
                         <div className="d-flex align-items-center col-10 me-2" style={{ flex: "1" }}>
                             <BsGripVertical className="me-1 ms-2 fs-3" style={{ color: "black", flexShrink: "0" }} />
@@ -105,7 +124,7 @@ export default function Assignments() {
                     </li>
                 ))}
             </ul>
-
+            
             <DeleteAssignmentDialog
                 dialogTitle="Confirm Deletion"
                 isVisible={showDeleteDialog}

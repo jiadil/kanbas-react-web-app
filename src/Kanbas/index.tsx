@@ -18,13 +18,19 @@ function KanbasContent() {
     const [courses, setCourses] = useState<any[]>([]);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const [course, setCourse] = useState<any>({
-        _id: "1234", name: "New Course", number: "New Number",
-        startDate: "2023-09-10", endDate: "2023-12-15", description: "New Description",
+        _id: "1234",
+        name: "New Course",
+        number: "New Number",
+        startDate: "2023-09-10",
+        endDate: "2023-12-15",
+        description: "New Description",
     });
 
-    const fetchCourses = async () => {
+    const fetchCourses = async (showAll = false) => {
         try {
-            const courses = await userClient.findMyCourses();
+            const courses = showAll ?
+                await courseClient.fetchAllCourses() :
+                await courseClient.fetchEnrolledCourses();
             setCourses(courses);
         } catch (error) {
             console.error(error);
@@ -32,7 +38,8 @@ function KanbasContent() {
     };
 
     useEffect(() => {
-        fetchCourses();
+        const showAllCourses = store.getState().enrollmentReducer.showAllCourses;
+        fetchCourses(showAllCourses);
     }, [currentUser]);
 
     const addNewCourse = async () => {
@@ -40,22 +47,21 @@ function KanbasContent() {
         setCourses([...courses, newCourse]);
     };
 
-
     const deleteCourse = async (courseId: string) => {
         const status = await courseClient.deleteCourse(courseId);
         setCourses(courses.filter((course) => course._id !== courseId));
     };
 
-
     const updateCourse = async () => {
         await courseClient.updateCourse(course);
         setCourses(courses.map((c) => {
-            if (c._id === course._id) { return course; }
-            else { return c; }
-        })
-        );
+            if (c._id === course._id) {
+                return course;
+            } else {
+                return c;
+            }
+        }));
     };
-
 
     return (
         <div id="wd-kanbas">
@@ -73,6 +79,8 @@ function KanbasContent() {
                                 addNewCourse={addNewCourse}
                                 deleteCourse={deleteCourse}
                                 updateCourse={updateCourse}
+                                fetchCourses={fetchCourses}
+                                setCourses={setCourses}
                             />
                         </ProtectedRoute>
                     } />
@@ -89,7 +97,6 @@ function KanbasContent() {
     );
 }
 
-// Main component just provides the context
 export default function Kanbas() {
     return (
         <Provider store={store}>
