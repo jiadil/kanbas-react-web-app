@@ -1,66 +1,66 @@
 import axios from "axios";
 
 const api = axios.create({
-    withCredentials: true
+    withCredentials: true,
+    baseURL: process.env.REACT_APP_REMOTE_SERVER
 });
 
-const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
-const COURSES_API = `${REMOTE_SERVER}/api/courses`;
-const USERS_API = `${REMOTE_SERVER}/api/users`;
+const COURSES_API = `/api/courses`;
+const USERS_API = `/api/users`;
 
+// Course operations
 export const fetchAllCourses = async () => {
-    const response = await axios.get(`${USERS_API}/current/courses?showAll=true`, {
-        withCredentials: true
-    });
-    return response.data;
+    const { data } = await api.get(`${USERS_API}/current/courses?showAll=true`);
+    return data;
 };
 
 export const fetchEnrolledCourses = async () => {
-    const response = await axios.get(`${USERS_API}/current/courses?showAll=false`, {
-        withCredentials: true
-    });
-    return response.data;
+    const { data } = await api.get(`${USERS_API}/current/courses?showAll=false`);
+    return data;
 };
 
-export const createModuleForCourse = async (courseId: string, module: any) => {
-    const response = await axios.post(
-        `${COURSES_API}/${courseId}/modules`,
-        module
-    );
-    return response.data;
-};
-
-
-
-export const findModulesForCourse = async (courseId: string) => {
-    const response = await axios
-        .get(`${COURSES_API}/${courseId}/modules`);
-    return response.data;
-};
-
-
-// export const fetchAllCourses = async () => {
-//     const { data } = await axios.get(COURSES_API);
-//     return data;
-// };
-
-export const deleteCourse = async (id: string) => {
-    const { data } = await axios.delete(`${COURSES_API}/${id}`);
+export const createCourse = async (course: any) => {
+    const { data } = await api.post(`${USERS_API}/current/courses`, course);
     return data;
 };
 
 export const updateCourse = async (course: any) => {
-    const { data } = await axios.put(`${COURSES_API}/${course._id}`, course);
+    const { data } = await api.put(`${COURSES_API}/${course._id}`, course);
     return data;
+};
+
+export const deleteCourse = async (id: string) => {
+    const { data } = await api.delete(`${COURSES_API}/${id}`);
+    return data;
+};
+
+// Module operations
+export const createModuleForCourse = async (courseId: string, module: any) => {
+    const { data } = await api.post(`${COURSES_API}/${courseId}/modules`, module);
+    return data;
+};
+
+export const findModulesForCourse = async (courseId: string) => {
+    const { data } = await api.get(`${COURSES_API}/${courseId}/modules`);
+    return data;
+};
+
+// Auth helper
+const testAuth = async () => {
+    try {
+        await api.post(`${USERS_API}/profile`);
+        return true;
+    } catch {
+        return false;
+    }
 };
 
 export default {
     fetchAllCourses,
     fetchEnrolledCourses,
-    deleteCourse,
+    createCourse,
     updateCourse,
-    findModulesForCourse,
-    createModuleForCourse
+    deleteCourse,
+    createModuleForCourse,
+    findModulesForCourse
 };
-
-
