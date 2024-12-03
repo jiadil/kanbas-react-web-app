@@ -19,10 +19,10 @@ export default function Labs() {
                         <a href="https://github.com/jiadil/kanbas-react-web-app">kanbas-react-web-app</a>
                     </li>
                     <li>
-                        <a href="https://github.com/jiadil/kanbas-node-server-app">kanbas-node-server-app</a>
+                        <a href="https://github.com/jiadil/kanbas-node-server-app-a6">kanbas-node-server-app</a>
                     </li>
                     <li>
-                        <a href="https://kanbas-node-server-app-qill.onrender.com">root of the server (Render)</a>
+                        <a href="https://kanbas-node-server-app-a6-ilyp.onrender.com">root of the server (Render)</a>
                     </li>
                 </ul>
 
