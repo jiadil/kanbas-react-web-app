@@ -15,8 +15,14 @@ export default function Modules() {
     const dispatch = useDispatch();
 
     const saveModule = async (module: any) => {
-        await modulesClient.updateModule(module);
-        dispatch(updateModule(module));
+        console.log('SaveModule called with:', module); // Add this log
+        try {
+            const updatedModule = await modulesClient.updateModule(module);
+            console.log('Response from server:', updatedModule);  // Add this log
+            dispatch(updateModule(updatedModule));
+        } catch (error) {
+            console.error('Error in saveModule:', error);  // Add this log
+        }
     };
 
 
@@ -28,9 +34,19 @@ export default function Modules() {
 
     const createModuleForCourse = async () => {
         if (!cid) return;
-        const newModule = { name: moduleName, course: cid };
-        const module = await coursesClient.createModuleForCourse(cid, newModule);
-        dispatch(addModule(module));
+        const newModule = {
+            name: moduleName,
+            course: cid,
+            lessons: []
+        };
+        try {
+            // Get the server response with MongoDB-generated ID
+            const createdModule = await coursesClient.createModuleForCourse(cid, newModule);
+            // Use the complete module from server response
+            dispatch(addModule(createdModule));
+        } catch (error) {
+            console.error('Error creating module:', error);
+        }
     };
 
 

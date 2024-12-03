@@ -8,7 +8,17 @@ export const deleteModule = async (moduleId: string) => {
 };
 
 export const updateModule = async (module: any) => {
-    const { data } = await axiosWithCredentials.put(`${MODULES_API}/${module._id}`, module);
-    return data;
+    console.log('Module being sent for update:', module); // Add this log
+    try {
+        const { data } = await axiosWithCredentials.put(
+            `${MODULES_API}/${module._id}`,
+            module
+        );
+        console.log('Response from update:', data); // Add this log
+        return data;
+    } catch (error) {
+        console.error('Update request error:',error);
+        throw error;
+    }
 };
 
