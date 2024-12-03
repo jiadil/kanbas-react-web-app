@@ -58,7 +58,7 @@ export default function PeopleTable({ users: propUsers, courseId }: PeopleTableP
                         <th>Name</th>
                         <th>Login ID</th>
                         <th>Role</th>
-                        {isFaculty && <th>Actions</th>}
+                        {/* {isFaculty && <th>Actions</th>} */}
                     </tr>
                 </thead>
                 <tbody>
@@ -73,7 +73,7 @@ export default function PeopleTable({ users: propUsers, courseId }: PeopleTableP
                             </td>
                             <td className="wd-login-id">{user.loginId}</td>
                             <td className="wd-role">{user.role}</td>
-                            {isFaculty && (
+                            {/* {isFaculty && (
                                 <td>
                                     <button
                                         className="btn btn-danger"
@@ -85,7 +85,7 @@ export default function PeopleTable({ users: propUsers, courseId }: PeopleTableP
                                         Remove
                                     </button>
                                 </td>
-                            )}
+                            )} */}
                         </tr>
                     ))}
                 </tbody>
