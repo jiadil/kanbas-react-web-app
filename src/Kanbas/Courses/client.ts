@@ -15,7 +15,7 @@ export const fetchAllCourses = async () => {
 };
 
 export const fetchEnrolledCourses = async () => {
-    const { data } = await api.get(`${USERS_API}/current/courses?showAll=false`);
+    const { data } = await api.get(`${USERS_API}/current/courses`);
     return data;
 };
 

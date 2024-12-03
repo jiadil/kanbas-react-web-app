@@ -31,7 +31,7 @@ function KanbasContent() {
             const courses = showAll ?
                 await courseClient.fetchAllCourses() :
                 await courseClient.fetchEnrolledCourses();
-            setCourses(courses);
+            setCourses([...courses]);
         } catch (error) {
             console.error(error);
         }

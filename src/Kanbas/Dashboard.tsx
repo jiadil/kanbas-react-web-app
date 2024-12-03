@@ -10,8 +10,9 @@ import courseClient from "./Courses/client";
 
 interface Enrollment {
     _id: string;
-    user: string;
     course: string;
+    user: string;
+    status: string;
 }
 
 export default function Dashboard(
@@ -40,11 +41,9 @@ export default function Dashboard(
         const loadData = async () => {
             if (currentUser?._id) {
                 try {
-                    // Load enrollments first
                     const enrollmentData = await enrollmentClient.findUserEnrollments(currentUser._id);
                     dispatch(setEnrollments(enrollmentData));
 
-                    // Then load appropriate courses based on showAllCourses state
                     const courses = showAllCourses ?
                         await courseClient.fetchAllCourses() :
                         await courseClient.fetchEnrolledCourses();
@@ -61,14 +60,16 @@ export default function Dashboard(
         try {
             if (isEnrolled(courseId)) {
                 await enrollmentClient.unenrollFromCourse(currentUser._id, courseId);
-                dispatch(removeEnrollment({
-                    userId: currentUser._id,
-                    courseId
-                }));
+                // Get fresh enrollment data after unenrolling
+                const newEnrollmentData = await enrollmentClient.findUserEnrollments(currentUser._id);
+                dispatch(setEnrollments(newEnrollmentData));
             } else {
                 const enrollment = await enrollmentClient.enrollInCourse(currentUser._id, courseId);
-                dispatch(addEnrollment(enrollment));
+                // Get fresh enrollment data after enrolling
+                const newEnrollmentData = await enrollmentClient.findUserEnrollments(currentUser._id);
+                dispatch(setEnrollments(newEnrollmentData));
             }
+
             // Reload courses after enrollment change
             const courses = showAllCourses ?
                 await courseClient.fetchAllCourses() :
@@ -80,9 +81,17 @@ export default function Dashboard(
     };
 
     const isEnrolled = (courseId: string) => {
-        return enrollments.some(
-            (e: Enrollment) => e.user === currentUser._id && e.course === courseId
-        );
+        const enrolled = enrollments.some((enrollment: Enrollment) => {
+            if (!enrollment) {
+                console.log("Invalid enrollment data");
+                return false;
+            }
+
+            const matchFound = enrollment._id === courseId;
+            return matchFound;
+        });
+
+        return enrolled;
     };
 
     return (
@@ -116,11 +125,6 @@ export default function Dashboard(
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
                     {courses
-                        .filter((course) =>
-                            currentUser.role === "FACULTY" ||
-                            showAllCourses ||
-                            isEnrolled(course._id)
-                        )
                         .map((course) => (
                             <div key={course._id} className="wd-dashboard-course col" style={{ width: "300px" }}>
                                 <div className="card rounded-3 overflow-hidden">
@@ -210,3 +214,4 @@ export default function Dashboard(
         </div>
     );
 }
+
